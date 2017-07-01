@@ -5,6 +5,7 @@
 // ==========
 // DECLARAMOS
 // ==========
+#define DEBUG 1
 #define UP_PIN 12
 #define DOWN_PIN 13
 #define UP_BUTTON 2
@@ -42,7 +43,7 @@ void setup() {
   setup_mqtt();
 
   #ifdef DEBUG
-    Serial.println("Setup completado! Iniciando modulo...");
+    Serial.println("Setup completado! Iniciando módulo...");
   #endif
 }
 

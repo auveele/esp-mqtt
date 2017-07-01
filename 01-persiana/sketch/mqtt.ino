@@ -1,3 +1,19 @@
+
+// ==========
+// mqtt.ino
+//
+// Este archivo contiene aquello relacionado con
+// la conexión wifi y el protocolo MQTT
+// 
+// Setup wifi
+// Setup mqtt.
+// Reconexión mqtt.
+// Loop mqtt.
+// Llamada callback de la suscripción mqtt.
+// ==========
+
+
+
 // ==========
 // SETUP WIFI
 // ==========

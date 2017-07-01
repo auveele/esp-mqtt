@@ -1,4 +1,15 @@
 
+// ==========
+// persiana.ino
+//
+// Este archivo contiene aquello relacionado con
+// la persiana: motor y conmutador de pared.
+// 
+// Subir, bajar y parar persiana.
+// Funciones a llamar por mqtt.
+// Loop persiana.
+// ==========
+
 int up_state = 0;
 int down_state = 0;
 // Saber de dónde viene la orden: LOW = botón, HIGH = mqtt
