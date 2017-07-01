@@ -32,12 +32,18 @@ void setup_pins() {
 // SETUP PRINCIPAL
 // ===============
 void setup() {
-  Serial.begin(115200);
-  Serial.println("\r\nIniciando...");
+  #ifdef DEBUG
+    Serial.begin(115200);
+    Serial.println("\r\nIniciando...");
+  #endif
+  
   setup_pins();
   setup_wifi();
   setup_mqtt();
-  Serial.println("Setup completado! Iniciando modulo...");
+
+  #ifdef DEBUG
+    Serial.println("Setup completado! Iniciando modulo...");
+  #endif
 }
 
 // ==============

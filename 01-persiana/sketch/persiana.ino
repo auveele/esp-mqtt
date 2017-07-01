@@ -1,15 +1,20 @@
 
 int up_state = 0;
 int down_state = 0;
-
-int mqtt_control = 0;
+// Saber de dónde viene la orden: LOW = botón, HIGH = mqtt
+int mqtt_control = LOW;
 
 void up() {
   digitalWrite(DOWN_PIN, LOW);
   delay(SECURITY_DELAY);
   digitalWrite(UP_PIN, HIGH);
   delay(SECURITY_DELAY);
-  Serial.println("ENTRA EN UP");
+  // mqtt_client.publish("/DOMUS/OFFICE/PERSIANA", "UP", true);
+
+  #ifdef DEBUG
+    Serial.println("ENTRA EN UP");
+  #endif
+  
 }
 
 void down() {
@@ -17,10 +22,15 @@ void down() {
   delay(SECURITY_DELAY);
   digitalWrite(DOWN_PIN, HIGH);
   delay(SECURITY_DELAY);
-  Serial.println("ENTRA EN DOWN");
+  // mqtt_client.publish("/DOMUS/OFFICE/PERSIANA", "DOWN", true);
+
+  #ifdef DEBUG
+    Serial.println("ENTRA EN DOWN");
+  #endif
 }
 
 void stop_all() {
+  // mqtt_client.publish("/DOMUS/OFFICE/PERSIANA", "STOP", true);
   digitalWrite(UP_PIN, LOW);
   digitalWrite(DOWN_PIN, LOW);
 }
@@ -42,22 +52,31 @@ void stop_mqtt() {
   mqtt_control = LOW;
 }
 
+
+// ==========
+// LOOP PERSIANA
+// ==========
 void loop_persiana() {
-  if (mqtt_control != HIGH) {
+  // Si mandan los botones, pillo valor botones.
+  if (mqtt_control == LOW) {
     up_state = digitalRead(UP_BUTTON);
     down_state = digitalRead(DOWN_BUTTON);
   } else {
-    if ((digitalRead(UP_BUTTON) == LOW) or (digitalRead(DOWN_BUTTON) == LOW)){
+    // En cambio, si manda mqtt,
+    // pero algún botón está pulsado:
+    // Manda botón de nuevo.
+    if ((digitalRead(UP_BUTTON) != HIGH) or (digitalRead(DOWN_BUTTON) != HIGH)){
       mqtt_control = LOW;
     }
   }
-  
+
+  // Si el botón UP se pulsa
   if (up_state != HIGH) {
-    Serial.println("up");
     up();
+  // Si el botón DOWN se pulsa
   } else if (down_state != HIGH){
     down();
-    Serial.println("down");
+  // Sino hay nada pulsado y mandan botones.
   } else {
     if (mqtt_control == LOW) {
       stop_all();
