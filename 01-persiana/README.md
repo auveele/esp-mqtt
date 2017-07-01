@@ -6,4 +6,4 @@ Control de la persiana motorizada por el ESP-RELAY (ESP-12).
 - [ ] IP fija
 - [ ] Envio de MQTT al pulsar botón físico
 - [ ] Volver automáticamente a STOP, pasado X tiempo.
-- [ ] Añadir opción de debug
+- [x] Añadir opción de debug
