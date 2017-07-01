@@ -5,6 +5,8 @@ void setup_wifi() {
   delay(10);
   Serial.print("Conectando a ");
   Serial.print(WIFI_SSID);
+  
+  WiFi.config(ip, gateway, subnet);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
