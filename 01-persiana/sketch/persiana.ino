@@ -4,6 +4,10 @@ int down_state = 0;
 // Saber de dónde viene la orden: LOW = botón, HIGH = mqtt
 int mqtt_control = LOW;
 
+
+// ==========
+// SUBIMOS PERSIANA
+// ==========
 void up() {
   digitalWrite(DOWN_PIN, LOW);
   delay(SECURITY_DELAY);
@@ -17,6 +21,9 @@ void up() {
   
 }
 
+// ==========
+// BAJAMOS PERSIANA
+// ==========
 void down() {
   digitalWrite(UP_PIN, LOW);
   delay(SECURITY_DELAY);
@@ -29,24 +36,38 @@ void down() {
   #endif
 }
 
+// ==========
+// PARAMOS PERSIANA
+// ==========
 void stop_all() {
   // mqtt_client.publish("/DOMUS/OFFICE/PERSIANA", "STOP", true);
   digitalWrite(UP_PIN, LOW);
   digitalWrite(DOWN_PIN, LOW);
 }
 
+
+
+// ==========
+// RECIBIMOS "SUBIR" por MQTT
+// ==========
 void up_mqtt() {
   mqtt_control = HIGH;
   up_state = LOW;
   down_state = HIGH;
 }
 
+// ==========
+// RECIBIMOS "BAJAR" por MQTT
+// ==========
 void down_mqtt() {
   mqtt_control = HIGH;
   up_state = HIGH;
   down_state = LOW;
 }
 
+// ==========
+// RECIBIMOS "STOP" por MQTT
+// ==========
 void stop_mqtt() {
   stop_all();
   mqtt_control = LOW;
