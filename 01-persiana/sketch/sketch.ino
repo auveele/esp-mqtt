@@ -1,5 +1,5 @@
 #include <ESP8266WiFi.h>        // For ESP8266
-#include <PubSubClient.h>       // For MQTT
+#include <AsyncMqttClient.h>    // For Async MQTT
 #include <Ticker.h>             // For avoid blockin functions
 
 // ==========
@@ -11,14 +11,6 @@
 #define UP_BUTTON 2
 #define DOWN_BUTTON 0
 #define SECURITY_DELAY 300
-#define INTERVAL_DELAY 50
-
-Ticker flip_connection;
-int connecting_state = LOW;
-
-// MQTT client
-WiFiClient espClient;
-PubSubClient mqtt_client(espClient);
 
 //=========
 //PIN SETUP
@@ -40,18 +32,13 @@ void setup() {
   #endif
 
   setup_pins();
-  setup_wifi();
   setup_mqtt();
-
-  #ifdef DEBUG
-    Serial.println("Setup completado! Iniciando módulo...");
-  #endif
+  setup_wifi();
+  setup_persiana();
 }
 
 // ==============
 // LOOP PRINCIPAL
 // ==============
 void loop() {
-  loop_persiana();
-  loop_mqtt();
 }
