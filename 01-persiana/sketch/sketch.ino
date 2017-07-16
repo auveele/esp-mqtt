@@ -13,7 +13,8 @@
 #define SECURITY_DELAY 300
 #define INTERVAL_DELAY 50
 
-Ticker flipper;
+Ticker flip_connection;
+int connecting_state = LOW;
 
 // MQTT client
 WiFiClient espClient;
@@ -37,7 +38,7 @@ void setup() {
     Serial.begin(115200);
     Serial.println("\r\nIniciando...");
   #endif
-  
+
   setup_pins();
   setup_wifi();
   setup_mqtt();

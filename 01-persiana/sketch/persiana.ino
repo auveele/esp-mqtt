@@ -4,7 +4,7 @@
 //
 // Este archivo contiene aquello relacionado con
 // la persiana: motor y conmutador de pared.
-// 
+//
 // Subir, bajar y parar persiana.
 // Funciones a llamar por mqtt.
 // Loop persiana.
@@ -26,10 +26,10 @@ void up() {
   delay(SECURITY_DELAY);
   // mqtt_client.publish("/DOMUS/OFFICE/PERSIANA", "UP", true);
 
-  #ifdef DEBUG
-    Serial.println("ENTRA EN UP");
-  #endif
-  
+#ifdef DEBUG
+  Serial.println("ENTRA EN UP");
+#endif
+
 }
 
 // ==========
@@ -42,9 +42,9 @@ void down() {
   delay(SECURITY_DELAY);
   // mqtt_client.publish("/DOMUS/OFFICE/PERSIANA", "DOWN", true);
 
-  #ifdef DEBUG
-    Serial.println("ENTRA EN DOWN");
-  #endif
+#ifdef DEBUG
+  Serial.println("ENTRA EN DOWN");
+#endif
 }
 
 // ==========
@@ -97,19 +97,19 @@ void loop_persiana() {
     // En cambio, si manda mqtt,
     // pero algún botón está pulsado:
     // Manda botón de nuevo.
-    if ((digitalRead(UP_BUTTON) != HIGH) or (digitalRead(DOWN_BUTTON) != HIGH)){
+    if ((digitalRead(UP_BUTTON) != HIGH) or (digitalRead(DOWN_BUTTON) != HIGH)) {
       mqtt_control = LOW;
     }
   }
 
-  // Si el botón UP se pulsa
   if (up_state != HIGH) {
+    // Si el botón UP se pulsa
     up();
-  // Si el botón DOWN se pulsa
-  } else if (down_state != HIGH){
+  } else if (down_state != HIGH) {
+    // Si el botón DOWN se pulsa
     down();
-  // Sino hay nada pulsado y mandan botones.
   } else {
+    // Sino hay nada pulsado y mandan botones.
     if (mqtt_control == LOW) {
       stop_all();
     }

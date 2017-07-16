@@ -4,7 +4,7 @@
 //
 // Este archivo contiene aquello relacionado con
 // la conexión wifi y el protocolo MQTT
-// 
+//
 // Setup wifi
 // Setup mqtt.
 // Reconexión mqtt.
@@ -22,14 +22,14 @@ void setup_wifi() {
     Serial.print("Conectando a ");
     Serial.print(WIFI_SSID);
   #endif
-  
+
   delay(10);
   WiFi.config(ip, gateway, subnet);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     #ifdef DEBUG
-      Serial.print(".");
+        Serial.print(".");
     #endif
   }
   #ifdef DEBUG
@@ -44,16 +44,15 @@ void setup_wifi() {
 // SETUP MQTT
 // ==========
 void setup_mqtt() {
-  
   #ifdef DEBUG
     Serial.println("Configurando cliente MQTT...");
   #endif
-  
+
   mqtt_client_id = mqtt_client_id + ESP.getChipId();
   mqtt_client.setServer(MQTT_SERVER, 1883);
   mqtt_client.setCallback(mqtt_callback);
   mqtt_client.subscribe(mqtt_base_topic.c_str());
-  
+
   #ifdef DEBUG
     Serial.printf("   Server IP: %s\r\n", MQTT_SERVER);
     Serial.printf("   Username:  %s\r\n", MQTT_USER);
@@ -63,42 +62,55 @@ void setup_mqtt() {
 }
 
 // ==============
+// CHECK MQTT CONNECTION
+// ==============
+void check_mqtt_connection() {
+  if (!mqtt_client.connected() and !connecting_state) {
+    connecting_state = HIGH;
+    mqtt_reconnect();
+  }
+}
+
+// ==============
 // MQTT RECONNECT
 // ==============
 void mqtt_reconnect() {
-  // Loop hasta que reconecte
-  while (!mqtt_client.connected()) {
+  #ifdef DEBUG
+    Serial.print("Intentando conexion MQTT...");
+  #endif
+  delay(200);
+  // Intentamos conexión con user y pass
+  if (mqtt_client.connect(mqtt_client_id.c_str(), MQTT_USER, MQTT_PASS)) {
+    // Dejamos de intentar contectar
+    ESP.reset();
+    connecting_state = LOW;
+    // Recien conectamos, nos suscribimos
+    mqtt_client.subscribe(mqtt_base_topic.c_str());
+    delay(100);
     #ifdef DEBUG
-      Serial.print("Intentando conexion MQTT...");
-    #endif
-    // Intentamos conexión con user y pass
-    if (mqtt_client.connect(mqtt_client_id.c_str(), MQTT_USER, MQTT_PASS)) {
-      mqtt_client.subscribe(mqtt_base_topic.c_str());
-      #ifdef DEBUG
         Serial.println("Conectado!");
-      #endif
-    } else {
-      #ifdef DEBUG
+    #endif
+  } else {
+    // Esperamos 5 segundos para reintento
+    /* delay(5000);
+    mqtt_reconnect();
+    */
+    flip_connection.once(5, mqtt_reconnect);
+    #ifdef DEBUG
         Serial.print("failed, rc=");
         Serial.print(mqtt_client.state());
         Serial.println(" nuevo intento en 5 segundos...");
-      #endif
-      // Esperamos 5 segundos para reintento
-      // TODO: Hacer no bloqueante.
-      delay(5000);
-    }
+    #endif
   }
 }
 
 // =========
 // LOOP MQTT
 // =========
-void loop_mqtt(){
+void loop_mqtt() {
   // Comprobar conexión de MQTT o reconectar
-  if (!mqtt_client.connected()) {
-    mqtt_reconnect();
-  }
-  mqtt_client.loop();
+  check_mqtt_connection();
+  if (mqtt_client.connected()) mqtt_client.loop();
 }
 
 // =======================
@@ -117,7 +129,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   for (int i = 0; i < length; i++) {
     mqtt_command = mqtt_command + (char)payload[i];
     #ifdef DEBUG
-      Serial.print((char)payload[i]);
+        Serial.print((char)payload[i]);
     #endif
   }
 
@@ -143,7 +155,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
     }
 
     #ifdef DEBUG
-      Serial.println(mqtt_command);
+        Serial.println(mqtt_command);
     #endif
   }
 }
