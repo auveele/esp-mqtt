@@ -10,7 +10,7 @@
 #define DOWN_PIN 13
 #define UP_BUTTON 2
 #define DOWN_BUTTON 0
-#define SECURITY_DELAY 300
+
 
 //=========
 //PIN SETUP

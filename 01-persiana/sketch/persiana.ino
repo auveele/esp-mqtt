@@ -15,6 +15,7 @@
 
 Ticker flip_persiana;
 Ticker auto_persiana;
+Ticker delay_persiana;
 
 #define STOP_STATE 0
 #define DOWN_STATE 1
@@ -40,9 +41,7 @@ void setup_persiana(){
 // ==========
 void up() {
   digitalWrite(DOWN_PIN, LOW);
-  delay(SECURITY_DELAY);
-  digitalWrite(UP_PIN, HIGH);
-  delay(SECURITY_DELAY);
+  delay_persiana.once_ms(SECURITY_DELAY, f_pin_up);
 }
 
 // ==========
@@ -50,10 +49,14 @@ void up() {
 // ==========
 void down() {
   digitalWrite(UP_PIN, LOW);
-  delay(SECURITY_DELAY);
-  digitalWrite(DOWN_PIN, HIGH);
-  delay(SECURITY_DELAY);
+  delay_persiana.once_ms(SECURITY_DELAY, f_pin_down);
 }
+
+// ==========
+// PIN CONTROL
+// ==========
+void f_pin_up()   { digitalWrite(UP_PIN, HIGH); }
+void f_pin_down() { digitalWrite(DOWN_PIN, HIGH); }
 
 // ==========
 // PARAMOS PERSIANA
@@ -91,7 +94,7 @@ void stop_mqtt() {
 
 
 // ==========
-// LOOP PERSIANA
+// CHECK INPUTS PERSIANA
 // ==========
 void check_persiana() {
 
