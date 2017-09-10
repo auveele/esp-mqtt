@@ -155,6 +155,12 @@ void on_mqtt_message(char* topic, char* payload, AsyncMqttClientMessagePropertie
       down_mqtt();
     } else if (mqtt_command.equals("STOP")) {
       stop_mqtt();
+    } else if (mqtt_command.equals("BLOCK")) {
+      // Bloquear mando físico
+      only_mqtt();
+    } else if (mqtt_command.equals("UNBLOCK")){
+      // Habilitar mando físico
+      not_only_mqtt();
     }
   }
 }

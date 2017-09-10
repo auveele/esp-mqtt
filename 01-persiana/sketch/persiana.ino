@@ -28,6 +28,7 @@ int last_persiana_state = STOP_STATE;
 // Saber de dónde viene la orden: LOW = botón, HIGH = mqtt
 int mqtt_control = LOW;
 
+
 // ==========
 // SETUP PERSIANA
 // ==========
@@ -92,6 +93,12 @@ void stop_mqtt() {
   stop_all();
 }
 
+// ==========
+// BLOQUEO MANDO - SOLO MQTT
+// ==========
+void only_mqtt(){ mqtt_only = HIGH; write_blocked(); }
+void not_only_mqtt(){ mqtt_only = LOW; write_blocked(); }
+
 
 // ==========
 // CHECK INPUTS PERSIANA
@@ -108,7 +115,7 @@ void check_persiana() {
   }
 
   // Si mandan los botones, pillo valor botones.
-  if (!mqtt_control) {
+  if (!mqtt_control && !mqtt_only) {
     if (up_button_state and !down_button_state){
       persiana_state = UP_STATE;
     } else if (!up_button_state and down_button_state){
