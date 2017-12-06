@@ -9,21 +9,28 @@
 // SETUP PRINCIPAL
 // ===============
 void setup() {
-  #ifdef DEBUG
+  delay(3000);
+  #ifdef DEBUG == 1
     Serial.begin(115200);
-    Serial.println("\r\nIniciando...");
+    Serial.println("\r\nIniciando!");
   #endif
 
   setup_pins();
-  setup_mqtt();
-  setup_wifi();
-  setup_persiana();
-  setup_restart();
+  setup_persiana();  
   setup_eeprom();
+  setup_restart();
+  setup_mqtt();
+  setup_wifi();  
 }
 
 // ==============
 // LOOP PRINCIPAL
 // ==============
 void loop() {
+}
+
+void print_memory(){
+  long mem = ESP.getFreeHeap();
+  Serial.print("freeMemory()=");
+  Serial.println(mem);
 }

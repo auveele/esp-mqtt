@@ -6,7 +6,6 @@
 // ==========
 
 
-AsyncMqttClient mqttClient;
 Ticker mqttReconnectTimer;
 
 
@@ -30,12 +29,19 @@ void setup_mqtt() {
   mqttClient.setCredentials(MQTT_USER, MQTT_PASS);
 
   #ifdef DEBUG
-    Serial.print("   Server IP: ");
+    Serial.print("\tServer IP: ");
+    delay(200);
     Serial.println(MQTT_BROKER);
-    Serial.print("   Username: ");
-    Serial.print(MQTT_USER);
-    Serial.println("   Cliend Id: " + mqtt_client_id);
-    Serial.println("   MQTT configurado!");
+    delay(200);
+    Serial.print("\tUsername: ");
+    delay(200);
+    Serial.println(MQTT_USER);
+    delay(200);
+    Serial.print("\tClient Id: ");
+    delay(200);
+    Serial.println(mqtt_client_id);
+    delay(200);
+    Serial.println("\tMQTT configurado!");
   #endif
 }
 
@@ -58,6 +64,7 @@ void on_mqtt_connect(bool sessionPresent) {
     // Serial.print("Sesión actual: ");
     // Serial.println(sessionPresent);
   #endif
+  send_reset_advice();
   mqtt_suscribe();
 }
 
@@ -164,4 +171,5 @@ void on_mqtt_message(char* topic, char* payload, AsyncMqttClientMessagePropertie
     }
   }
 }
+
 

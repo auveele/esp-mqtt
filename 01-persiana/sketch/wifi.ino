@@ -11,8 +11,6 @@
 // ==========
 
 
-WiFiEventHandler wifiConnectHandler;
-WiFiEventHandler wifiDisconnectHandler;
 Ticker wifiReconnectTimer;
 
 
@@ -20,29 +18,46 @@ Ticker wifiReconnectTimer;
 // SETUP WIFI
 // ==========
 void setup_wifi() {
-  wifiConnectHandler = WiFi.onStationModeGotIP(on_wifi_connect);
-  wifiDisconnectHandler = WiFi.onStationModeDisconnected(on_wifi_disconnect);
+  WiFi.disconnect(true);
+  WiFi.onEvent(event_wifi);
   WiFi.config(WIFI_IP, WIFI_GATEWAY, WIFI_SUBNET);
   connect_wifi();
+}
+
+// ==========
+// EVENT WIFI
+// ==========
+void event_wifi(WiFiEvent_t event) {
+    switch(event) {
+        case WIFI_EVENT_STAMODE_GOT_IP:
+            on_wifi_connect();
+            break;
+        case WIFI_EVENT_STAMODE_DISCONNECTED:
+            on_wifi_disconnect();
+            break;
+    }
 }
 
 // ==========
 // CONNECT WIFI
 // ==========
 void connect_wifi() {
+  WiFi.hostname("TEST_ESP");
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
   #ifdef DEBUG
     Serial.print("Conectando a wifi ...");
+    delay(200);
   #endif
-  WiFi.begin(WIFI_SSID, WIFI_PASS);
 }
 
 // ==========
 // EVENT - ON WIFI CONNECT
 // ==========
-void on_wifi_connect(const WiFiEventStationModeGotIP& event) {
+void on_wifi_connect() {
+// void on_wifi_connect(const WiFiEventStationModeConnected& event) {
   #ifdef DEBUG
     Serial.println("OK");
-    Serial.print("   IP: ");
+    Serial.print("\tIP: ");
     Serial.println(WiFi.localIP());
   #endif
   // En conectar la wifi, se intenta conectar a MQTT
@@ -52,7 +67,7 @@ void on_wifi_connect(const WiFiEventStationModeGotIP& event) {
 // ==========
 // EVENT - ON WIFI DISCONNECT
 // ==========
-void on_wifi_disconnect(const WiFiEventStationModeDisconnected& event) {
+void on_wifi_disconnect() {
   #ifdef DEBUG
     Serial.println("Desconectado de la wifi.");
   #endif
@@ -61,4 +76,5 @@ void on_wifi_disconnect(const WiFiEventStationModeDisconnected& event) {
   // Programamos reconexión a Wifi tras 2 segundos.
   wifiReconnectTimer.once(2, connect_wifi);
 }
+
 
