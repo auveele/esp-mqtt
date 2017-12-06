@@ -1,16 +1,20 @@
 
-// ==========
-// persiana.ino
-//
-// Este archivo contiene aquello relacionado con
-// la persiana: motor y conmutador de pared.
-//
-// Subir, bajar y parar persiana.
-// Funciones a llamar por mqtt.
-// Check estado de la persiana.
-// Check auto: comprueba si ha cambiado el estado en un invervalo y sino, hace stop
-//    para no mantener los relés continuamente encendidos.
-// ==========
+/*########################
+##########################
+
+  persiana.ino
+
+  Este archivo contiene aquello relacionado con
+  la persiana: motor y conmutador de pared.
+
+  Subir, bajar y parar persiana.
+  Funciones a llamar por mqtt.
+  Check estado de la persiana.
+  Check auto: comprueba si ha cambiado el estado en un invervalo y sino, hace stop
+              para no mantener los relés continuamente encendidos.
+
+##########################
+########################*/
 
 
 Ticker flip_persiana;
@@ -29,80 +33,80 @@ int last_persiana_state = STOP_STATE;
 int mqtt_control = LOW;
 
 
-// ==========
+// ##############
 // SETUP PERSIANA
-// ==========
+// ##############
 void setup_persiana(){
   flip_persiana.attach_ms(INPUT_INTERVAL, check_persiana);
   // auto_persiana.attach(AUTO_INTERVAL, check_auto);
 }
 
-// ==========
+// ################
 // SUBIMOS PERSIANA
-// ==========
+// ################
 void up() {
   digitalWrite(DOWN_PIN, LOW);
   delay_persiana.once_ms(SECURITY_DELAY, f_pin_up);
 }
 
-// ==========
+// ################
 // BAJAMOS PERSIANA
-// ==========
+// ################
 void down() {
   digitalWrite(UP_PIN, LOW);
   delay_persiana.once_ms(SECURITY_DELAY, f_pin_down);
 }
 
-// ==========
+// ###########
 // PIN CONTROL
-// ==========
+// ###########
 void f_pin_up()   { digitalWrite(UP_PIN, HIGH); }
 void f_pin_down() { digitalWrite(DOWN_PIN, HIGH); }
 
-// ==========
+// ################
 // PARAMOS PERSIANA
-// ==========
+// ################
 void stop_all() {
   digitalWrite(UP_PIN, LOW);
   digitalWrite(DOWN_PIN, LOW);
 }
 
 
-// ==========
+// ##########################
 // RECIBIMOS "SUBIR" por MQTT
-// ==========
+// ##########################
 void up_mqtt() {
   mqtt_control = HIGH;
   persiana_state = UP_STATE;
 }
 
-// ==========
+// ##########################
 // RECIBIMOS "BAJAR" por MQTT
-// ==========
+// ##########################
 void down_mqtt() {
   mqtt_control = HIGH;
   persiana_state = DOWN_STATE;
 }
 
-// ==========
+// #########################
 // RECIBIMOS "STOP" por MQTT
-// ==========
+// #########################
 void stop_mqtt() {
   mqtt_control = HIGH;
   persiana_state = STOP_STATE;
   stop_all();
 }
 
-// ==========
+// #########################
 // BLOQUEO MANDO - SOLO MQTT
-// ==========
+// #########################
 void only_mqtt(){ mqtt_only = HIGH; write_blocked(); }
 void not_only_mqtt(){ mqtt_only = LOW; write_blocked(); }
 
 
-// ==========
+// #####################
 // CHECK INPUTS PERSIANA
-// ==========
+// #####################
 void check_persiana() {
 
   // Leo botones

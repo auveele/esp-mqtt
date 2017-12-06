@@ -5,15 +5,28 @@
 
 #define DEBUG 1
 
-// ===============
+// #####
+// DEBUG
+// #####
+#ifdef DEBUG
+ #define DEBUG_PRINT(x)     Serial.print (x)
+ #define DEBUG_PRINTDEC(x)  Serial.print (x, DEC)
+ #define DEBUG_PRINTLN(x)   Serial.println (x)
+#else
+ #define DEBUG_PRINT(x)
+ #define DEBUG_PRINTDEC(x)
+ #define DEBUG_PRINTLN(x)
+#endif 
+
+// ###############
 // SETUP PRINCIPAL
-// ===============
+// ###############
 void setup() {
   delay(3000);
-  #ifdef DEBUG == 1
+  #ifdef DEBUG
     Serial.begin(115200);
-    Serial.println("\r\nIniciando!");
   #endif
+  DEBUG_PRINTLN("\r\nIniciando!");
 
   setup_pins();
   setup_persiana();  
@@ -23,14 +36,8 @@ void setup() {
   setup_wifi();  
 }
 
-// ==============
+// ##############
 // LOOP PRINCIPAL
-// ==============
+// ##############
 void loop() {
-}
-
-void print_memory(){
-  long mem = ESP.getFreeHeap();
-  Serial.print("freeMemory()=");
-  Serial.println(mem);
 }
