@@ -75,3 +75,4 @@ void send_reset_advice(){
     if (mqttClient.connected()) mqttClient.publish(topic, 2, true, "BAD");
   }
 }
+

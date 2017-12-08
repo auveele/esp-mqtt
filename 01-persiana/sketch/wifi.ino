@@ -72,4 +72,3 @@ void on_wifi_disconnect() {
   wifiReconnectTimer.once(2, connect_wifi);
 }
 
-
